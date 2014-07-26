@@ -3,25 +3,38 @@ body {
 	margin: 0;
 }
 
-.wrapper {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-	width: 80%;
-	height: 80%;
-	background-color: #eee;
-	border: 1px solid #aaa;
-}
+.clearfix {clear: both;}
 
-.kennel_list {
+#kennels {
 	text-align: center;
+	margin-top: 200px;
 }
 
 .kennel {
-	width: 30%;
+	position: relative;
+	width: 200px;
+	height: 80px;
+	display: inline-block;
+	margin: 20px 50px;
+}
+
+.kennel_circle_top, .kennel_circle_bottom {
+	position: absolute;
+	left: 0;
+	right: 0;
 	height: 50%;
 	background-color: #000;
-	display: inline-block;
+}
+.kennel_circle_top {top: 0;}
+.kennel_circle_bottom {bottom: 0; z-index: 1;}
+
+.meerkat img {width: 100%; display: block;}
+.meerkat {
+	position: absolute;
+	left: 40px;
+	right: 40px;
+	bottom: 20px;
+	height: 0;
+	overflow: hidden;
+	cursor: pointer;
 }
