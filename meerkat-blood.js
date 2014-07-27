@@ -11,6 +11,11 @@ var effects = {};
 	effects.show = "easeOutElastic";
 	effects.hide = "easeInOutElastic";
 
+function meerkat_get_rand_show_speed()
+{
+	return parseInt(Math.random() * (1000 - 700) + 700);
+}
+
 function updateInfo()
 {
 	$("#bg").html(successCnt+"_"+plstCnt);
@@ -104,6 +109,6 @@ function meerkat_get_random_show()
 
 function meerkat_start()
 {
-	setInterval(meerkat_get_random_show, 2000);
+	setInterval(meerkat_get_random_show, meerkat_get_rand_show_speed());
 }
 
