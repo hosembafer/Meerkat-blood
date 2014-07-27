@@ -5,76 +5,99 @@ var meerkats;
 
 var successCnt = 0;
 var plstCnt = 0;
-
-var indHides = {};
+var sh_speed = 700;
 
 function updateInfo()
 {
-	$(".info").html(successCnt+"_"+plstCnt);
+	$("#bg").html(successCnt+"_"+plstCnt);
 }
 
 function meerkat_init()
 {
-	meerkatCnt = $(".meerkat").size();
-	meerkats = $(".meerkat");
+	meerkats = document.getElementsByClassName("meerkat");
+	meerkatCnt = meerkats.length;
+	
+	kennels = document.getElementsByClassName("kennel");
+	kennelCnt = kennels.length;
 	
 	$(".meerkat").click(function() {
 		meerkat_break(this);
 	});
-	
-	//meerkat_get_random_show();
 }
 
-function meerkat_break(meerkat)
+function meerkat_click(mk)
 {
-	$(meerkat).animate({"height": 0}, 300);
+	if(!$(mk).hasClass("in_hide"))
+		meerkat_hide_mk(mk, "user");
+}
+
+function meerkat_kennel_have_mk(kn)
+{
+	return $(kn).find(".meerkat").size();
+}
+
+function meerkat_create_dom()
+{
+	meerkat = document.createElement("div");
+	meerkat.className = "meerkat";
+		meerkatImg = document.createElement("img");
+		meerkatImg.src = "resources/meerkat-normal.svg";
+		meerkat.appendChild(meerkatImg);
+	
+	$(meerkat).click(function() {
+		meerkat_click(this);
+	});
+	
+	return meerkat;
+}
+
+function meerkat_hide_mk(mk, hand)
+{
+	$(mk).addClass("in_hide");
+	$(mk).animate({height: 0}, sh_speed);
 	setTimeout(function() {
-		successCnt++;
-		updateInfo();
-	}, 300);
-}
-
-function meerkat_show(ind)
-{
-	$(meerkats).eq(ind).animate({"height": 212}, 300);
-}
-
-function meerkat_is_hide(ind)
-{
-	if($(meerkats).eq(ind).height() != 0)
-		return false;
-	return true;
-}
-
-function meerkat_timeout_hide(ind)
-{
-	tmt = setTimeout(function() {
-		if(!meerkat_is_hide(ind))
+		if(hand == "auto" && mk.parentNode != null)
 		{
-			$(meerkats).eq(ind).animate({"height": 0}, 300);
-			setTimeout(function() {
-				if(!meerkat_is_hide(ind))
-				{
-					plstCnt++;
-					updateInfo();
-				}
-			}, 300);
+			plstCnt++;
 		}
-	}, 2500);
-	
-	indHides[ind] = tmt;
+		else if(hand == "user")
+		{
+			successCnt++;
+		}
+		$(mk).remove();
+		updateInfo();
+	}, sh_speed);
 }
 
+function meerkat_show_mk(mk)
+{
+	$(mk).animate({height: 212}, sh_speed);
+}
+
+function meerkat_break_mk(mk, hand)
+{
+	setTimeout(function() {
+		meerkat_hide_mk(mk, hand);
+	}, 1500);
+}
 
 function meerkat_get_random_show()
 {
-	setInterval(function() {
-		randMK = parseInt(Math.random() * (meerkatCnt - 0) + 0);
-		if(meerkat_is_hide(randMK))
-		{
-			meerkat_show(randMK);
-			meerkat_timeout_hide(randMK);
-		}
-	}, 700);
+	randPos = parseInt(Math.random() * (kennelCnt - 0) + 0);
 	
+	new_mk = meerkat_create_dom();
+	kn = kennels[randPos];
+	
+	if(!meerkat_kennel_have_mk(kn))
+	{
+		kennels[randPos].appendChild(new_mk);
+		meerkat_show_mk(new_mk);
+		meerkat_break_mk(new_mk, "auto");
+	}
 }
+
+function meerkat_start()
+{
+	setInterval(meerkat_get_random_show, 2000);
+}
+
