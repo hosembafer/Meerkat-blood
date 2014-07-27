@@ -23,6 +23,8 @@ function meerkat_init()
 	$(".meerkat").click(function() {
 		meerkat_break(this);
 	});
+	
+	meerkat_start();
 }
 
 function meerkat_click(mk)
