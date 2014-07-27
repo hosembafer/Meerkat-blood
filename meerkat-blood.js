@@ -7,6 +7,10 @@ var successCnt = 0;
 var plstCnt = 0;
 var sh_speed = 700;
 
+var effects = {};
+	effects.show = "easeOutElastic";
+	effects.hide = "easeInOutElastic";
+
 function updateInfo()
 {
 	$("#bg").html(successCnt+"_"+plstCnt);
@@ -56,7 +60,7 @@ function meerkat_create_dom()
 function meerkat_hide_mk(mk, hand)
 {
 	$(mk).addClass("in_hide");
-	$(mk).animate({height: 0}, sh_speed);
+	$(mk).animate({height: 0}, sh_speed, effects.hide);
 	setTimeout(function() {
 		if(hand == "auto" && mk.parentNode != null)
 		{
@@ -73,7 +77,7 @@ function meerkat_hide_mk(mk, hand)
 
 function meerkat_show_mk(mk)
 {
-	$(mk).animate({height: 212}, sh_speed);
+	$(mk).animate({height: 212}, sh_speed, effects.show);
 }
 
 function meerkat_break_mk(mk, hand)
