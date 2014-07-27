@@ -6,6 +6,7 @@ var meerkats;
 var successCnt = 0;
 var plstCnt = 0;
 var sh_speed = 700;
+var sh_inerval = [3000, 1000];
 
 var effects = {};
 	effects.show = "easeOutElastic";
@@ -13,7 +14,7 @@ var effects = {};
 
 function meerkat_get_rand_show_speed()
 {
-	return parseInt(Math.random() * (1000 - 700) + 700);
+	return parseInt(Math.random() * (sh_inerval[0] - sh_inerval[1]) + sh_inerval[1]);
 }
 
 function updateInfo()
@@ -94,21 +95,24 @@ function meerkat_break_mk(mk, hand)
 
 function meerkat_get_random_show()
 {
-	randPos = parseInt(Math.random() * (kennelCnt - 0) + 0);
-	
-	new_mk = meerkat_create_dom();
-	kn = kennels[randPos];
-	
-	if(!meerkat_kennel_have_mk(kn))
-	{
-		kennels[randPos].appendChild(new_mk);
-		meerkat_show_mk(new_mk);
-		meerkat_break_mk(new_mk, "auto");
-	}
+	setTimeout(function() {
+		randPos = parseInt(Math.random() * (kennelCnt - 0) + 0);
+		
+		new_mk = meerkat_create_dom();
+		kn = kennels[randPos];
+		
+		if(!meerkat_kennel_have_mk(kn))
+		{
+			kennels[randPos].appendChild(new_mk);
+			meerkat_show_mk(new_mk);
+			meerkat_break_mk(new_mk, "auto");
+		}
+	}, meerkat_get_rand_show_speed());
 }
 
 function meerkat_start()
 {
-	setInterval(meerkat_get_random_show, meerkat_get_rand_show_speed());
+	meerkat_get_random_show();
+	setInterval(meerkat_get_random_show, 1000);
 }
 
