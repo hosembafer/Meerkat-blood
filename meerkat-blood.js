@@ -8,6 +8,13 @@ var plstCnt = 0;
 var sh_speed = 700;
 var sh_inerval = [3000, 1000];
 
+var inst_sounds = {
+	hummer: {
+		src: "resources/sound/hummer.mp3",
+		seconds: 5000
+	}
+};
+
 var effects = {};
 	effects.show = "easeOutElastic";
 	effects.hide = "easeInOutElastic";
@@ -19,7 +26,7 @@ function meerkat_get_rand_show_speed()
 
 function updateInfo()
 {
-	$("#bg").html(successCnt+"_"+plstCnt);
+	$("#bg__info").html(successCnt+"_"+plstCnt);
 }
 
 function meerkat_init()
@@ -41,9 +48,27 @@ function meerkat_click(mk)
 {
 	if(!$(mk).hasClass("in_hide"))
 	{
-		$(mk).find("img").attr("src", "resources/meerkat-hummer-1.svg");
+		$(mk).find("img").attr("src", "resources/breaks/hummer/1.svg");
 		meerkat_hide_mk(mk, "user");
+		meerkat_add_sound("hummer");
 	}
+}
+
+function meerkat_attach_sound_remove_timeout(it, sec)
+{
+	setTimeout(function() {
+		$(it).remove();
+	}, sec);
+}
+
+function meerkat_add_sound(inst)
+{
+	elem = document.createElement("audio");
+	elem.src = inst_sounds[inst].src;
+	elem.autoplay = true;
+	document.body.appendChild(elem);
+	
+	meerkat_attach_sound_remove_timeout(elem, inst_sounds[inst].seconds);
 }
 
 function meerkat_kennel_have_mk(kn)
@@ -59,7 +84,9 @@ function meerkat_create_dom()
 		meerkatImg.src = "resources/meerkat-normal.svg";
 		meerkat.appendChild(meerkatImg);
 	
-	$(meerkat).click(function() {
+	meerkat.onmousedown = function() {return false};
+	
+	$(meerkat).mousedown(function() {
 		meerkat_click(this);
 	});
 	
@@ -93,7 +120,7 @@ function meerkat_break_mk(mk, hand)
 {
 	setTimeout(function() {
 		meerkat_hide_mk(mk, hand);
-	}, 1000);
+	}, 1200);
 }
 
 function meerkat_get_random_show()
