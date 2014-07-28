@@ -8,6 +8,10 @@ var plstCnt = 0;
 var sh_speed = 700;
 var sh_inerval = [3000, 1000];
 
+var is_paused = false;
+
+var sock_arr = [];
+
 var effect_sounds = {
 	hummer: {src: "resources/sound/hummer.mp3"}
 };
@@ -35,7 +39,8 @@ function meerkat_init()
 	kennelCnt = kennels.length;
 	
 	$(".meerkat").click(function() {
-		meerkat_break(this);
+		if(!is_paused)
+			meerkat_break(this);
 	});
 	
 	meerkat_start();
@@ -43,7 +48,7 @@ function meerkat_init()
 
 function meerkat_click(mk)
 {
-	if(!$(mk).hasClass("in_hide"))
+	if(!$(mk).hasClass("in_hide") && !is_paused)
 	{
 		$(mk).find("img").attr("src", "resources/breaks/hummer/1.svg");
 		meerkat_hide_mk(mk, "user");
@@ -53,14 +58,17 @@ function meerkat_click(mk)
 
 function meerkat_add_sound(inst)
 {
-	break_effect = document.createElement("audio");
-	break_effect.src = effect_sounds[inst].src;
-	break_effect.autoplay = true;
-	document.body.appendChild(break_effect);
-	
-	$(break_effect).on("ended", function() {
-		this.remove();
-	});
+	if(!is_paused)
+	{
+		break_effect = document.createElement("audio");
+		break_effect.src = effect_sounds[inst].src;
+		break_effect.autoplay = true;
+		document.body.appendChild(break_effect);
+		
+		$(break_effect).on("ended", function() {
+			this.remove();
+		});
+	}
 }
 
 function meerkat_kennel_have_mk(kn)
@@ -79,7 +87,8 @@ function meerkat_create_dom()
 	meerkat.onmousedown = function() {return false};
 	
 	$(meerkat).mousedown(function() {
-		meerkat_click(this);
+		if(!is_paused)
+			meerkat_click(this);
 	});
 	
 	return meerkat;
@@ -87,54 +96,80 @@ function meerkat_create_dom()
 
 function meerkat_hide_mk(mk, hand)
 {
-	$(mk).addClass("in_hide");
-	$(mk).animate({height: 0}, sh_speed, effects.hide);
-	setTimeout(function() {
-		if(hand == "auto" && mk.parentNode != null)
-		{
-			plstCnt++;
-		}
-		else if(hand == "user")
-		{
-			successCnt++;
-		}
-		$(mk).remove();
-		updateInfo();
-	}, sh_speed);
+	if(!is_paused)
+	{
+		$(mk).addClass("in_hide");
+		$(mk).animate({height: 0}, sh_speed, effects.hide);
+		
+		sock_arr.push(setTimeout(function() {
+			if(!is_paused)
+			{
+				if(hand == "auto" && mk.parentNode != null)
+				{
+					plstCnt++;
+				}
+				else if(hand == "user")
+				{
+					successCnt++;
+				}
+				$(mk).remove();
+				updateInfo();
+			}
+		}, sh_speed));
+	}
 }
 
 function meerkat_show_mk(mk)
 {
-	$(mk).animate({height: 212}, sh_speed, effects.show);
+	if(!is_paused)
+		$(mk).animate({height: 212}, sh_speed, effects.show);
 }
 
 function meerkat_break_mk(mk, hand)
 {
-	setTimeout(function() {
-		meerkat_hide_mk(mk, hand);
-	}, 1200);
+	if(!is_paused)
+		setTimeout(function() {
+			if(!is_paused)
+				meerkat_hide_mk(mk, hand);
+		}, 1200);
 }
 
 function meerkat_get_random_show()
 {
-	setTimeout(function() {
-		randPos = parseInt(Math.random() * (kennelCnt - 0) + 0);
-		
-		new_mk = meerkat_create_dom();
-		kn = kennels[randPos];
-		
-		if(!meerkat_kennel_have_mk(kn))
-		{
-			kennels[randPos].appendChild(new_mk);
-			meerkat_show_mk(new_mk);
-			meerkat_break_mk(new_mk, "auto");
-		}
-	}, meerkat_get_rand_show_speed());
+	if(!is_paused)
+		setTimeout(function() {
+			if(!is_paused)
+			{
+				randPos = parseInt(Math.random() * (kennelCnt - 0) + 0);
+				
+				new_mk = meerkat_create_dom();
+				kn = kennels[randPos];
+				
+				if(!meerkat_kennel_have_mk(kn))
+				{
+					kennels[randPos].appendChild(new_mk);
+					meerkat_show_mk(new_mk);
+					meerkat_break_mk(new_mk, "auto");
+				}
+			}
+		}, meerkat_get_rand_show_speed());
 }
 
 function meerkat_start()
 {
-	meerkat_get_random_show();
-	setInterval(meerkat_get_random_show, 1000);
+	if(!is_paused)
+	{
+		meerkat_get_random_show();
+		setInterval(meerkat_get_random_show, 1000);
+	}
 }
 
+function meerkat_play()
+{
+	is_paused = false;
+}
+
+function meerkat_pause()
+{
+	is_paused = true;
+}
