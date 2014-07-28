@@ -8,11 +8,8 @@ var plstCnt = 0;
 var sh_speed = 700;
 var sh_inerval = [3000, 1000];
 
-var inst_sounds = {
-	hummer: {
-		src: "resources/sound/hummer.mp3",
-		seconds: 5000
-	}
+var effect_sounds = {
+	hummer: {src: "resources/sound/hummer.mp3"}
 };
 
 var effects = {};
@@ -54,21 +51,16 @@ function meerkat_click(mk)
 	}
 }
 
-function meerkat_attach_sound_remove_timeout(it, sec)
-{
-	setTimeout(function() {
-		$(it).remove();
-	}, sec);
-}
-
 function meerkat_add_sound(inst)
 {
-	elem = document.createElement("audio");
-	elem.src = inst_sounds[inst].src;
-	elem.autoplay = true;
-	document.body.appendChild(elem);
+	break_effect = document.createElement("audio");
+	break_effect.src = effect_sounds[inst].src;
+	break_effect.autoplay = true;
+	document.body.appendChild(break_effect);
 	
-	meerkat_attach_sound_remove_timeout(elem, inst_sounds[inst].seconds);
+	$(break_effect).on("ended", function() {
+		this.remove();
+	});
 }
 
 function meerkat_kennel_have_mk(kn)
