@@ -40,7 +40,10 @@ function meerkat_init()
 function meerkat_click(mk)
 {
 	if(!$(mk).hasClass("in_hide"))
+	{
+		$(mk).find("img").attr("src", "resources/meerkat-hummer-1.svg");
 		meerkat_hide_mk(mk, "user");
+	}
 }
 
 function meerkat_kennel_have_mk(kn)
@@ -90,7 +93,7 @@ function meerkat_break_mk(mk, hand)
 {
 	setTimeout(function() {
 		meerkat_hide_mk(mk, hand);
-	}, 1500);
+	}, 1000);
 }
 
 function meerkat_get_random_show()
