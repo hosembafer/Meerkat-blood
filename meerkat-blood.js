@@ -40,7 +40,9 @@ function meerkat_init()
 	
 	$(".meerkat").click(function() {
 		if(!is_paused)
+		{
 			meerkat_break(this);
+		}
 	});
 	
 	meerkat_start();
@@ -88,7 +90,9 @@ function meerkat_create_dom()
 	
 	$(meerkat).mousedown(function() {
 		if(!is_paused)
+		{
 			meerkat_click(this);
+		}
 	});
 	
 	return meerkat;
@@ -122,7 +126,9 @@ function meerkat_hide_mk(mk, hand)
 function meerkat_show_mk(mk)
 {
 	if(!is_paused)
+	{
 		$(mk).animate({height: 212}, sh_speed, effects.show);
+	}
 }
 
 function meerkat_break_mk(mk, hand)
@@ -130,13 +136,16 @@ function meerkat_break_mk(mk, hand)
 	if(!is_paused)
 		setTimeout(function() {
 			if(!is_paused)
+			{
 				meerkat_hide_mk(mk, hand);
+			}
 		}, 1200);
 }
 
 function meerkat_get_random_show()
 {
 	if(!is_paused)
+	{
 		setTimeout(function() {
 			if(!is_paused)
 			{
@@ -153,6 +162,7 @@ function meerkat_get_random_show()
 				}
 			}
 		}, meerkat_get_rand_show_speed());
+	}
 }
 
 function meerkat_start()
